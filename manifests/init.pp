@@ -6,7 +6,7 @@ class eclipse($version='luna', $release='R') {
   $dl_url = "http://www.eclipse.org/downloads/download.php?r=1&file=/technology/epp/downloads/release/${version}/${release}/eclipse-standard-${version}-${release}-macosx-cocoa-x86_64.tar.gz"
 
   exec { 'eclipse download':
-    command => "rm -rf ${tmp_dir} && mkdir -p ${tmp_dir} && curl -o ${tmp_dir}/eclipse.tar.gz '${dl_url}'",
+    command => "rm -rf ${tmp_dir} && mkdir -p ${tmp_dir} && curl -o ${tmp_dir}/eclipse.tar.gz \'${dl_url}\'",
     cwd     => '/',
     notify  => Exec['eclipse repack'],
   }
