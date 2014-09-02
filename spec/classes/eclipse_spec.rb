@@ -1,9 +1,21 @@
 require 'spec_helper'
-# Rename this file to classname_spec.rb
-# Check other boxen modules for examples
-# or read http://rspec-puppet.com/tutorial/
-describe 'template' do
-  it do
-    should contain_anchor('Hello_World')
+
+
+describe 'eclipse' do
+
+  describe 'when not specifying a version' do
+    it { should contain_package('Eclipse-luna-R').with({
+      :ensure   => 'installed',
+      :provider => 'compressed_app'
+    })}
+    it { should contain_package('Eclipse-luna-R').with_source('http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/luna/R/eclipse-standard-luna-R-macosx-cocoa-x86_64.tar.gz?r=1')}
   end
+
+  describe 'when specifying a specific version' do
+    let (:params) {{:version => 'kepler', :release => 'SR2'}}
+
+    it { should contain_package('Eclipse-kepler-SR2')}
+    it { should contain_package('Eclipse-kepler-SR2').with_source('http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/kepler/SR2/eclipse-standard-kepler-SR2-macosx-cocoa-x86_64.tar.gz?r=1')}
+  end
+
 end
