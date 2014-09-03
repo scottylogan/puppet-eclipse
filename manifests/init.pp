@@ -37,19 +37,6 @@ class eclipse($version='luna', $release='R') {
     command     => "rm -rf ${tmp_dir}",
     cwd         => '/',
     refreshonly => true,
-    notify      => Exec['eclipse jvmcapabilities fixup'],
-  }
-
-  exec { 'eclipse jvmcapabilities fixup':
-    command     => 'for pl in /Library/Java/JavaVirtualMachines/jdk1.7*.jdk/Contents/Info.plist; do plutil -replace JavaVM.JVMCapabilities -json \'["CommandLine","BundledApp","JNI"]\' $pl; done',
-    require     => Package['java'],
-    refreshonly => true,
-    notify      => Exec['eclipse jdk missing symlink'],
-  }
-
-  exec { 'eclipse jdk missing symlink':
-    command     => 'for jdk in /Library/Java/JavaVirtualMachines/jdk1.7*.jdk/Contents/Home; do mkdir -p $jdk/bundle/Libraries && ln -s $jdk/jre/lib/server/libjvm.dylib $jdk/bundle/Libraries/libserver.dylib; done',
-    refreshonly => true,
   }
 
 }
