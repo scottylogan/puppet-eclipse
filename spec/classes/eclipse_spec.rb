@@ -7,12 +7,12 @@ describe 'eclipse' do
     it { should contain_package('eclipse').with({
       :ensure => 'installed',
       :name   => "eclipse-luna-R",
-      :source => '/tmp/eclipse/eclipse-luna-R.tar.gz',
+      :source => 'file:///tmp/eclipse/eclipse-luna-R.tar.gz',
     })}
 
     it { should contain_file('/Applications/Eclipse.app').with({
       :ensure => 'link',
-      :target => "/Applications/eclipse-luna-R/Eclipse.app",
+      :target => "/Applications/eclipse-luna-R.app/Eclipse.app",
     })}
   end
 
@@ -22,12 +22,12 @@ describe 'eclipse' do
     it { should contain_package('eclipse').with({
       :ensure => 'installed',
       :name   => "eclipse-kepler-SR2",
-      :source => '/tmp/eclipse/eclipse-kepler-SR2.tar.gz',
+      :source => 'file:///tmp/eclipse/eclipse-kepler-SR2.tar.gz',
     })}
 
     it { should contain_file('/Applications/Eclipse.app').with({
       :ensure => 'link',
-      :target => "/Applications/eclipse-kepler-SR2/Eclipse.app",
+      :target => "/Applications/eclipse-kepler-SR2.app/Eclipse.app",
     })}
 
   end
