@@ -16,12 +16,15 @@ class eclipse($version='luna', $release='R') {
     cwd     => $tmp_dir,
     require => File[$tmp_dir],
     notify  => Exec['eclipse repack'],
+    creates => "/Applications/${pkg_name}.app/Eclipse.app/Contents/Info.plist",
   }
 
   exec { 'eclipse repack':
     command     => "tar xzf eclipse.tar.gz && mv eclipse ${pkg_name}.app && tar czf ${pkg_name}.tar.gz ${pkg_name}.app",
     cwd         => $tmp_dir,
     refreshonly => true,
+    require     => File[$tmp_dir],
+    creates     => "${tmp_dir}/${pkg_name}.tar.gz",
     notify      => Package['eclipse'],
   }
 
@@ -31,12 +34,14 @@ class eclipse($version='luna', $release='R') {
     source   => "file://${tmp_dir}/${pkg_name}.tar.gz",
     alias    => 'eclipse',
     provider => compressed_app,
+    require  => File[$tmp_dir],
     notify   => File['/Applications/Eclipse.app'],
   }
 
   file { '/Applications/Eclipse.app':
     ensure  => link,
     target  => "/Applications/${pkg_name}.app/Eclipse.app",
+    require => Package['eclipse'],
     notify  => Exec['eclipse cleanup'],
   }
 
@@ -44,6 +49,7 @@ class eclipse($version='luna', $release='R') {
     command     => "rm -rf ${tmp_dir}",
     cwd         => '/',
     refreshonly => true,
+    require     => File['/Applications/Eclipse.app'],
   }
 
 }
