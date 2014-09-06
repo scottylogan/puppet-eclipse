@@ -16,7 +16,6 @@ class eclipse($version='luna', $release='R') {
     cwd     => $tmp_dir,
     require => File[$tmp_dir],
     notify  => Exec['eclipse repack'],
-    creates => "/Applications/${pkg_name}.app/Eclipse.app/Contents/Info.plist",
   }
 
   exec { 'eclipse repack':
