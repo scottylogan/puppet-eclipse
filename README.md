@@ -1,8 +1,3 @@
-# Using this Template
-
-
-Uses P2 Director to download and install plugins, following the instructions in the [Eclipse Manual](http://help.eclipse.org/indigo/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fmisc%2Fruntime-options.html)
-
 [![Build Status](https://travis-ci.org/scottylogan/puppet-eclipse.svg?branch=features)](https://travis-ci.org/scottylogan/puppet-eclipse)
 
 ## Usage
@@ -12,8 +7,13 @@ include eclipse
 include eclipse::pdt
 ```
 
+## Adding More Plugins
+
+Just copy one of the existing plugin classes, like pdt.pp, and change
+the title, version and repo attributes.
+
 ## Required Puppet Modules
 
 * `boxen`
-* `anything-else`
+* `stdlib`
 
