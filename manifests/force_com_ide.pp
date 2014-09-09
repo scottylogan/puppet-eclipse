@@ -16,13 +16,19 @@ class eclipse::force_com_ide(
       command => "${p2} -repository ${feature_repos} -installIU ${feature_group}/${feature_version}",
       unless  => "test -d ${feature_path}",
       creates => $feature_path,
-      require => Package[$eclipse::pkg_name],
+      require => [
+        Package[$eclipse::pkg_name],
+        File['/Applications/Eclipse.app'],
+      ],
     }
   } else {
     exec { 'eclipse egit_mylyn remove':
       command => "${p2} -uninstallIU ${feature_group}/${feature_version}",
       onlyif  => "test -d ${feature_path}",
-      require => Package[$eclipse::pkg_name],
+      require => [
+        Package[$eclipse::pkg_name],
+        File['/Applications/Eclipse.app'],
+      ],
     }
   }
   
