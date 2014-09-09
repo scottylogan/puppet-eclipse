@@ -15,6 +15,7 @@ class eclipse($version='luna', $release='R') {
     command => "curl -qLo eclipse.tar.gz '${dl_url}'",
     cwd     => $tmp_dir,
     require => File[$tmp_dir],
+    timeout => 1200,
     notify  => Exec['eclipse repack'],
   }
 
