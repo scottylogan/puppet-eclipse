@@ -35,13 +35,12 @@ class eclipse($version='luna', $release='R') {
     alias    => 'eclipse',
     provider => compressed_app,
     require  => File[$tmp_dir],
-    notify   => File['/Applications/Eclipse.app'],
   }
 
   file { '/Applications/Eclipse.app':
     ensure  => link,
     target  => "/Applications/${pkg_name}.app/Eclipse.app",
-    require => Package['eclipse'],
+    require => Package[$pkg_name],
     notify  => Exec['eclipse cleanup'],
   }
 
