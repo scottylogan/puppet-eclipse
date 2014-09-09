@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/scottylogan/puppet-eclipse.svg?branch=features)](https://travis-ci.org/scottylogan/puppet-eclipse)
+[![Build Status](https://travis-ci.org/scottylogan/puppet-eclipse.svg?branch=master)](https://travis-ci.org/scottylogan/puppet-eclipse)
 
 ## Usage
 
