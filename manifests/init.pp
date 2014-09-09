@@ -30,7 +30,7 @@ class eclipse($version='luna', $release='R') {
 
   package { 'eclipse':
     ensure   => installed,
-    name     => "eclipse-${version}-${release}",
+    name     => $pkg_name,
     source   => "file://${tmp_dir}/${pkg_name}.tar.gz",
     alias    => 'eclipse',
     provider => compressed_app,
