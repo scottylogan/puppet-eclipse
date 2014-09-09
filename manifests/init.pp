@@ -1,11 +1,31 @@
 # install 64 bit eclipse
-class eclipse($version='luna', $release='R') {
+class eclipse(
+  $version        = 'luna',
+  $release        = 'R',
+) {
 
-  $tmp_dir = '/tmp/eclipse'
-  $pkg_name = "eclipse-${version}-${release}"
-  $dl_url = "http://www.eclipse.org/downloads/download.php?r=1&file=/technology/epp/downloads/release/${version}/${release}/eclipse-standard-${version}-${release}-macosx-cocoa-x86_64.tar.gz"
+  $tmp      = '/tmp/eclipse'
+  $pkg      = "eclipse-${version}-${release}"
+  $repo     = 'http://download.eclipse.org/releases/luna'
+  $app      = '/Applications/Eclipse.app'
+  $cli      = "${app}/Contents/MacOS/eclipse"
+  $features = "/Applications/${pkg}.app/features"
+  $p2       = "${cli} -application org.eclipse.equinox.p2.director -noSplash"
+  $dl_url   = join([
+                'http://www.eclipse.org/downloads/download.php',
+                '?r=1',
+                '&file=/technology/epp/downloads/release/',
+                $version,
+                '/',
+                $release,
+                '/eclipse-standard-',
+                $version,
+                '-',
+                $release,
+                '-macosx-cocoa-x86_64.tar.gz'
+              ], '')
 
-  file { $tmp_dir:
+  file { $tmp:
     ensure  => directory,
     force   => true,
     purge   => true,
@@ -13,42 +33,42 @@ class eclipse($version='luna', $release='R') {
 
   exec { 'eclipse download':
     command => "curl -qLo eclipse.tar.gz '${dl_url}'",
-    cwd     => $tmp_dir,
-    require => File[$tmp_dir],
+    cwd     => $tmp,
+    require => File[$tmp],
     timeout => 1200,
     notify  => Exec['eclipse repack'],
   }
 
   exec { 'eclipse repack':
-    command     => "tar xzf eclipse.tar.gz && mv eclipse ${pkg_name}.app && tar czf ${pkg_name}.tar.gz ${pkg_name}.app",
-    cwd         => $tmp_dir,
+    command     => "tar xzf eclipse.tar.gz && mv eclipse ${pkg}.app && tar czf ${pkg}.tar.gz ${pkg}.app",
+    cwd         => $tmp,
     refreshonly => true,
-    require     => File[$tmp_dir],
-    creates     => "${tmp_dir}/${pkg_name}.tar.gz",
+    require     => File[$tmp],
+    creates     => "${tmp}/${pkg}.tar.gz",
     notify      => Package['eclipse'],
   }
 
   package { 'eclipse':
     ensure   => installed,
-    name     => $pkg_name,
-    source   => "file://${tmp_dir}/${pkg_name}.tar.gz",
+    name     => $pkg,
+    source   => "file://${tmp}/${pkg}.tar.gz",
     alias    => 'eclipse',
     provider => compressed_app,
-    require  => File[$tmp_dir],
+    require  => File[$tmp],
   }
 
-  file { '/Applications/Eclipse.app':
+  file { $app:
     ensure  => link,
-    target  => "/Applications/${pkg_name}.app/Eclipse.app",
-    require => Package[$pkg_name],
+    target  => "/Applications/${pkg}.app/Eclipse.app",
+    require => Package[$pkg],
     notify  => Exec['eclipse cleanup'],
   }
 
   exec { 'eclipse cleanup':
-    command     => "rm -rf ${tmp_dir}",
+    command     => "rm -rf ${tmp}",
     cwd         => '/',
     refreshonly => true,
-    require     => File['/Applications/Eclipse.app'],
+    require     => File[$app],
   }
 
 }
