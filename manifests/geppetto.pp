@@ -1,35 +1,16 @@
 # install Geppetto (Puppet) Development Tools
 class eclipse::geppetto(
-  $ensure = present,
-  $eclipse_version = '4.4',
-  $feature_version = '4.2.0.v20140725-1640',
-  $feature_group = 'com.puppetlabs.geppetto.feature.group',
-  $feature_repos = 'https://geppetto-updates.puppetlabs.com/4.x,http://download.eclipse.org/releases/luna',
+  $ensure   = present,
+  $version  = '4.2.0.v20140725-1640',
+  $repo     = 'https://geppetto-updates.puppetlabs.com/4.x',
 ) {
 
-  $p2 = "/Applications/Eclipse.app/Contents/MacOS/eclipse -application org.eclipse.equinox.p2.director -noSplash"
+  include eclipse
 
-  $feature_path = "/Applications/${eclipse::pkg_name}.app/features/${feature_group}_${feature_version}"
-
-  if $ensure == 'present' {
-    exec { 'eclipse geppetto install':
-      command => "${p2} -repository ${feature_repos} -installIU ${feature_group}/${feature_version}",
-      unless  => "test -d ${feature_path}",
-      creates => $feature_path,
-      require => [
-        Package[$eclipse::pkg_name],
-        File['/Applications/Eclipse.app'],
-      ],
-    }
-  } else {
-    exec { 'eclipse geppetto remove':
-      command => "${p2} -uninstallIU ${feature_group}/${feature_version}",
-      onlyif  => "test -d ${feature_path}",
-      require => [
-        Package[$eclipse::pkg_name],
-        File['/Applications/Eclipse.app'],
-      ],
-    }
+  eclipse::feature{ 'com.puppetlabs.geppetto':
+    ensure  => $ensure,
+    version => $version,
+    repo    => $repo,
   }
-  
+
 }
