@@ -34,6 +34,7 @@ class eclipse(
   exec { 'eclipse download':
     command => "curl -qLo eclipse.tar.gz '${dl_url}'",
     cwd     => $tmp,
+    unless  => "test -f /var/db/.puppet_compressed_app_installed_${pkg}",
     require => File[$tmp],
     timeout => 1200,
     notify  => Exec['eclipse repack'],
